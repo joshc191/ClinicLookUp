@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <title>Calgary School Hospital/Clinic Look-Up</title>
+
+      <!-- Add latest Mapbox GL JS and Turf.js libraries -->
+      <link href='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css' rel='stylesheet' />
+      <script src='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js'></script>
+      <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
+
+      <!-- Add jQuery-CSV library to read CSV files -->
+      <script src="jquery-csv.js"></script>
+  </head>
+  <body>
+    <h1>Calgary School Hospital/Clinic Look-Up</h1>
+    <!-- Create section for map -->
+    <div id="mapid" style="width: 1000px; height: 600px; position: relative;" ></div> <br>
+    <h2>About</h2>
+    <p>Find the closest hospital or clinic to a school in Calgary. Start by clicking on a school.</p>
+
+    <script>
+      mapboxgl.accessToken = 'pk.eyJ1Ijoiam9zaGMxOTEiLCJhIjoiY2ttNXNtcXBoMGhhajJucHIzazlyaTdqZyJ9.Jbdqu_PcXM3CdFB2PLFXDQ';
+      var map = new mapboxgl.Map({
+      container: 'mapid', // container id
+      style: 'mapbox://styles/mapbox/light-v10', // stylesheet location
+      center: [-114.0719,51.0447], // starting position
+      zoom: 12 // starting zoom
+      });
+
+      // load school data
+      var clinic_data = $.csv.toObjects(data/Health_Services.csv);
+      var school_data = $.csv.toObjects(data/School_Locations.csv);
+
+      // Create layer for schools and clinics
+      map.on('load', function() {
+        map.addLayer({
+          id: 'clinics',
+          type: 'symbol',
+          source: {
+            type: 'geojson',
+            data: clinic_data
+          },
+          layout: {
+            'icon-image': 'hospital-15',
+            'icon-allow-overlap': true
+          },
+          paint: { }
+        });
+        map.addLayer({
+          id: 'schools',
+          type: 'symbol',
+          source: {
+            type: 'geojson',
+            data: school_data
+          },
+          layout: {
+            'icon-image': 'school-15'
+          },
+          paint: { }
+        });
+      });
+
+
+      // Add pop-ups for each clinic and school
+      var popup = new mapboxgl.Popup();
+      map.on('mousemove', function(e) {
+        var features = map.queryRenderedFeatures(e.point, { layers: ['clinics', 'schools'] });
+        if (!features.length) {
+          popup.remove();
+          return;
+        }
+        var feature = features[0];
+
+        popup.setLngLat(feature.geometry.coordinates)
+          .setHTML(feature.properties.Name)
+          .addTo(map);
+
+        map.getCanvas().style.cursor = features.length ? 'pointer' : '';
+      });
+    </script>
+  </body>
+</html>
