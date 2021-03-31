@@ -140,52 +140,6 @@
       	console.log('Error', error);
       });
 
-      // // Create layer for schools and clinics
-      // map.on('load', function() {
-      //   map.addLayer({
-      //     id: 'clinics',
-      //     type: 'symbol',
-      //     source: {
-      //       type: 'geojson',
-      //       data: clinic_data
-      //     },
-      //     layout: {
-      //       'icon-image': 'hospital-15',
-      //       'icon-allow-overlap': true
-      //     },
-      //     paint: { }
-      //   });
-      //   map.addLayer({
-      //     id: 'schools',
-      //     type: 'symbol',
-      //     source: {
-      //       type: 'geojson',
-      //       data: school_data
-      //     },
-      //     layout: {
-      //       'icon-image': 'school-15'
-      //     },
-      //     paint: { }
-      //   });
-      // });
-      //
-      //
-      // // Add pop-ups for each clinic and school
-      // var popup = new mapboxgl.Popup();
-      // map.on('mousemove', function(e) {
-      //   var features = map.queryRenderedFeatures(e.point, { layers: ['clinics', 'schools'] });
-      //   if (!features.length) {
-      //     popup.remove();
-      //     return;
-      //   }
-      //   var feature = features[0];
-      //
-      //   popup.setLngLat(feature.geometry.coordinates)
-      //     .setHTML(feature.properties.Name)
-      //     .addTo(map);
-      //
-      //   map.getCanvas().style.cursor = features.length ? 'pointer' : '';
-      // });
     </script>
   </body>
 </html>
